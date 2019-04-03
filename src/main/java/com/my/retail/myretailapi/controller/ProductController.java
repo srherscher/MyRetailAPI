@@ -1,6 +1,7 @@
 package com.my.retail.myretailapi.controller;
 
 import com.my.retail.myretailapi.businesslogic.ProductReader;
+import com.my.retail.myretailapi.data.PriceVO;
 import com.my.retail.myretailapi.data.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class ProductController {
     }
 
     @PutMapping("/v2/products/{productID}")
-    public void putProductByID(@PathVariable(value = "productID") long productID, @RequestBody String body) {
-        productReader.applyPutRequest(productID, body);
+    public PriceVO putProductByID(@PathVariable(value = "productID") long productID, @RequestBody String body) {
+        PriceVO priceVO = productReader.applyPutRequest(productID, body);
+        return priceVO;
     }
 }

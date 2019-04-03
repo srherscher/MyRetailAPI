@@ -41,7 +41,9 @@ public class ProductReaderImpl implements ProductReader {
             JSONObject jsonObject = new JSONObject(jsonString).getJSONObject("product");
             String productName = getProductNameFromJSON(jsonObject);
             PriceVO priceVO = repository.findByid(id);
-            productVO = new ProductVO(id, productName, priceVO.getPrice(), priceVO.getCurrencyType());
+            if(null != priceVO){
+                productVO = new ProductVO(id, productName, priceVO.getPrice(), priceVO.getCurrencyType());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -55,7 +57,7 @@ public class ProductReaderImpl implements ProductReader {
         return productName;
     }
 
-    public void applyPutRequest(long id, String body) {
+    public PriceVO applyPutRequest(long id, String body) {
         PriceVO currentPriceVO = repository.findByid(id);
         PriceVO newPriceVO = convertJSONToPriceVO(body);
         if(currentPriceVO != null){
@@ -65,6 +67,7 @@ public class ProductReaderImpl implements ProductReader {
                 repository.save(newPriceVO);
             }
         }
+        return newPriceVO;
     }
 
     private PriceVO convertJSONToPriceVO(String body){

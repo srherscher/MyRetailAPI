@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProductReader {
     ProductVO getResponse(String targetURL, long id);
 
-    void applyPutRequest(long id, String body);
+    PriceVO applyPutRequest(long id, String body);
 
     List<Integer> getAllIDs();
 
