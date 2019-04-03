@@ -20,14 +20,14 @@ public class ProductReaderImpl implements ProductReader {
 
     @Autowired
     private ProductRepository repository;
-    Connection connection = new ConnectionImpl();
-    ObjectMapper mapper = new ObjectMapper();
+    private Connection connection = new ConnectionImpl();
+    private ObjectMapper mapper = new ObjectMapper();
 
 
-    public List<Integer> getAllIDs(){
+    public List<Integer> getAllIDs() {
         List<Integer> allIDs = new ArrayList<>();
-        for (PriceVO priceVO : repository.findAll()){
-            allIDs.add( (int) priceVO.getId());
+        for (PriceVO priceVO : repository.findAll()) {
+            allIDs.add((int) priceVO.getId());
         }
         return allIDs;
     }
@@ -41,7 +41,7 @@ public class ProductReaderImpl implements ProductReader {
             JSONObject jsonObject = new JSONObject(jsonString).getJSONObject("product");
             String productName = getProductNameFromJSON(jsonObject);
             PriceVO priceVO = repository.findByid(id);
-            if(null != priceVO){
+            if (null != priceVO) {
                 productVO = new ProductVO(id, productName, priceVO.getPrice(), priceVO.getCurrencyType());
             }
         } catch (IOException e) {
@@ -53,24 +53,23 @@ public class ProductReaderImpl implements ProductReader {
     }
 
     private String getProductNameFromJSON(JSONObject jsonObject) throws JSONException {
-        String productName = jsonObject.getJSONObject("item").getJSONObject("product_description").getString("title");
-        return productName;
+        return jsonObject.getJSONObject("item").getJSONObject("product_description").getString("title");
     }
 
     public PriceVO applyPutRequest(long id, String body) {
         PriceVO currentPriceVO = repository.findByid(id);
         PriceVO newPriceVO = convertJSONToPriceVO(body);
-        if(currentPriceVO != null){
+        if (currentPriceVO != null) {
             currentPriceVO.setPrice(newPriceVO.getPrice());
             currentPriceVO.setCurrencyType(newPriceVO.getCurrencyType());
-            if(null != newPriceVO){
+            if (newPriceVO != null) {
                 repository.save(newPriceVO);
             }
         }
         return newPriceVO;
     }
 
-    private PriceVO convertJSONToPriceVO(String body){
+    private PriceVO convertJSONToPriceVO(String body) {
         PriceVO priceVO = null;
         try {
             priceVO = mapper.readValue(body, PriceVO.class);

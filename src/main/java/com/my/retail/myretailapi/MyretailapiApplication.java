@@ -1,6 +1,5 @@
 package com.my.retail.myretailapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.retail.myretailapi.businesslogic.ProductRepository;
 import com.my.retail.myretailapi.data.PriceVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class MyretailapiApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         repository.deleteAll();
 
