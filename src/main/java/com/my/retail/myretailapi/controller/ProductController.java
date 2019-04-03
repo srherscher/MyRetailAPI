@@ -19,7 +19,7 @@ public class ProductController {
         this.productReader = productReader;
     }
 
-    @GetMapping("/v2/products/")
+    @GetMapping("/v2/products")
     public List<Integer> getAllPriceIDs() {
         List<Integer> allIDs = productReader.getAllIDs();
         return allIDs;
