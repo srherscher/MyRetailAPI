@@ -9,7 +9,9 @@ import com.my.retail.myretailapi.data.ProductVO;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +43,13 @@ public class ProductReaderImpl implements ProductReader {
             JSONObject jsonObject = new JSONObject(jsonString).getJSONObject("product");
             String productName = getProductNameFromJSON(jsonObject);
             PriceVO priceVO = repository.findByid(id);
-            if (null != priceVO) {
-                productVO = new ProductVO(id, productName, priceVO.getPrice(), priceVO.getCurrencyType());
+            if (null == priceVO) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": not found");
             }
+            productVO = new ProductVO(id, productName, priceVO.getPrice(), priceVO.getCurrencyType());
         } catch (IOException e) {
             e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": not found");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -59,13 +63,15 @@ public class ProductReaderImpl implements ProductReader {
     public PriceVO applyPutRequest(long id, String body) {
         PriceVO currentPriceVO = repository.findByid(id);
         PriceVO newPriceVO = convertJSONToPriceVO(body);
-        if (currentPriceVO != null) {
-            currentPriceVO.setPrice(newPriceVO.getPrice());
-            currentPriceVO.setCurrencyType(newPriceVO.getCurrencyType());
-            if (newPriceVO != null) {
-                repository.save(newPriceVO);
-            }
+        if (currentPriceVO == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": not found");
         }
+        if (newPriceVO != null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": incorrect JSON");
+        }
+        currentPriceVO.setPrice(newPriceVO.getPrice());
+        currentPriceVO.setCurrencyType(newPriceVO.getCurrencyType());
+        repository.save(newPriceVO);
         return newPriceVO;
     }
 
