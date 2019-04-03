@@ -1,5 +1,5 @@
 Before running make sure you have docker installed and your JAVA_HOME path variable set(also make sure ports 8080 and 27017 are free)
-Also make sure you are logged into the default docker hub to pull the mongoDB image. Do 'docker login' in ther terminal to login
+Also make sure you are logged into the default docker hub to pull the mongoDB image. Do 'docker login' in the terminal to login
 
 Navigate to the directory in the terminal and run the script runIt.bat (may need to alter it if not running windows)
 
