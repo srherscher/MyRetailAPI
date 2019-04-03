@@ -2,8 +2,8 @@ package com.my.retail.myretailapi.businesslogic.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.retail.myretailapi.businesslogic.Connection;
-import com.my.retail.myretailapi.businesslogic.ProductReader;
-import com.my.retail.myretailapi.businesslogic.ProductRepository;
+import com.my.retail.myretailapi.businesslogic.PriceRepository;
+import com.my.retail.myretailapi.businesslogic.Product;
 import com.my.retail.myretailapi.data.PriceVO;
 import com.my.retail.myretailapi.data.ProductVO;
 import org.json.JSONException;
@@ -18,13 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductReaderImpl implements ProductReader {
+public class ProductImpl implements Product {
 
     @Autowired
-    private ProductRepository repository;
+    private PriceRepository repository;
     private Connection connection = new ConnectionImpl();
     private ObjectMapper mapper = new ObjectMapper();
 
+    public ProductImpl() {
+    }
+
+    public ProductImpl(PriceRepository repository, Connection connection) {
+        this.repository = repository;
+        this.connection = connection;
+    }
 
     public List<Integer> getAllIDs() {
         List<Integer> allIDs = new ArrayList<>();
@@ -34,12 +41,19 @@ public class ProductReaderImpl implements ProductReader {
         return allIDs;
     }
 
-    //Add some sort of validation on the JSON you get?
-    //Set response code?
+    //Things to add for production:
+    //Add some sort of validation on the JSON you get
+    //Convert the RedSky JSON response into an actual object because parsing JSON like I did is nasty
+    //Set response codes/better error handling
+    //Add logging
+    //Host on some sort of cloud based platform like OpenShift or AWS
+    //Put the Spring Boot portion into a docker image as well
+    //More functionality in terms of RESTFul responses
+    //Cover all my scenarios with tests
     public ProductVO getResponse(String targetURL, long id) {
         ProductVO productVO = new ProductVO();
         try {
-            String jsonString = connection.getResponseFromURL(targetURL, id);
+            String jsonString = connection.getResponseFromURL(targetURL + id);
             JSONObject jsonObject = new JSONObject(jsonString).getJSONObject("product");
             String productName = getProductNameFromJSON(jsonObject);
             PriceVO priceVO = repository.findByid(id);
@@ -66,7 +80,7 @@ public class ProductReaderImpl implements ProductReader {
         if (currentPriceVO == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": not found");
         }
-        if (newPriceVO != null) {
+        if (newPriceVO == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, id + ": incorrect JSON");
         }
         currentPriceVO.setPrice(newPriceVO.getPrice());

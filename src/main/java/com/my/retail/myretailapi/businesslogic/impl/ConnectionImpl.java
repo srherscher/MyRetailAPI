@@ -10,9 +10,9 @@ import java.net.URL;
 
 public class ConnectionImpl implements Connection {
 
-    public String getResponseFromURL(String targetURL, long id) throws IOException {
+    public String getResponseFromURL(String targetURL) throws IOException {
         StringBuilder result = new StringBuilder();
-        URL url = new URL(targetURL + id);
+        URL url = new URL(targetURL);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

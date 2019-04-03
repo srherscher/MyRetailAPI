@@ -1,6 +1,6 @@
 package com.my.retail.myretailapi;
 
-import com.my.retail.myretailapi.businesslogic.ProductRepository;
+import com.my.retail.myretailapi.businesslogic.PriceRepository;
 import com.my.retail.myretailapi.data.PriceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MyretailapiApplication implements CommandLineRunner {
 
     @Autowired
-    private ProductRepository repository;
+    private PriceRepository repository;
 
     public static void main(String[] args) {
         SpringApplication.run(MyretailapiApplication.class, args);
