@@ -16,3 +16,5 @@ To update a price, use Postman or a similar application to make a PUT request to
         "currencyType": "USD"
     }
 Responds with an error based on if GET returns nothing or you try and use PUT to update a record that doesnt exist in the data store
+
+Unit tests exist in test/java/com.my.retail.myretailapi and can be ran from there
